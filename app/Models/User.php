@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Traits\HasRoles;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
 {
-    use HasFactory, SoftDeletes, HasRoles;
+    use HasFactory, HasApiTokens, SoftDeletes, HasRoles;
 
     public $table = 'users';
     public $primaryKey = 'id';
@@ -18,6 +20,15 @@ class User extends Model
         'personal_name',
         'email',
         'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'verified_at',
     ];
 
 }

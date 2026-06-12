@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Product;
 use App\Models\Operation;
-use App\Models\Return;
+use App\Models\Devolution;
 
 class OperationDetail extends Model
 {
@@ -30,8 +30,8 @@ class OperationDetail extends Model
         return $this->belongsTo(Operation::class, 'id', 'operation_id');
     }
 
-    public function returns(){
-        return $this->belongsToMany(Return::class, "return_details", "operation_detail_id", "return_id")
+    public function devolutions(){
+        return $this->belongsToMany(Devolution::class, "return_details", "operation_detail_id", "return_id")
                     ->withPivot('quantity', 'return_price', 'commodity_condition');
     }
 

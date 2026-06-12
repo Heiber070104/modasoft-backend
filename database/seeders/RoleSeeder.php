@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Permissions;
+use App\Enums\Roles;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class RoleSeeder extends Seeder
 {
@@ -13,31 +16,70 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminRole = Role::findOrCreate('admin');
-        $adminRole->givePermissionTo(Permission::all());
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        $managerRole = Role::findOrCreate('manager');
-        $managerRole->givePermissionTo([
-            'view users',
-            'view transactions',
-            'view reports'
+        $guardName = config('auth.defaults.guard', 'web');
+
+        $admin = Role::findOrCreate(Roles::ADMIN->value, $guardName);
+        $manager = Role::findOrCreate(Roles::MANAGER->value, $guardName);
+        $seller = Role::findOrCreate(Roles::SELLER->value, $guardName);
+        $buyer = Role::findOrCreate(Roles::BUYER->value, $guardName);
+        $accountant = Role::findOrCreate(Roles::ACCOUNTANT->value, $guardName);
+
+        $admin->syncPermissions(Permission::where('guard_name', $guardName)->get());
+
+        $manager->syncPermissions([
+            Permissions::VIEW_USERS->value, Permissions::CREATE_USERS->value, Permissions::EDIT_USERS->value, Permissions::DELETE_USERS->value,
+            Permissions::VIEW_CATEGORIES->value, Permissions::CREATE_CATEGORIES->value, Permissions::EDIT_CATEGORIES->value, Permissions::DELETE_CATEGORIES->value,
+            Permissions::VIEW_SIZES->value, Permissions::CREATE_SIZES->value, Permissions::EDIT_SIZES->value, Permissions::DELETE_SIZES->value,
+            Permissions::VIEW_PRODUCTS->value, Permissions::CREATE_PRODUCTS->value, Permissions::EDIT_PRODUCTS->value, Permissions::DELETE_PRODUCTS->value,
+            Permissions::VIEW_SUPPLIERS->value, Permissions::CREATE_SUPPLIERS->value, Permissions::EDIT_SUPPLIERS->value, Permissions::DELETE_SUPPLIERS->value,
+            Permissions::VIEW_CUSTOMERS->value, Permissions::CREATE_CUSTOMERS->value, Permissions::EDIT_CUSTOMERS->value, Permissions::DELETE_CUSTOMERS->value,
+            Permissions::VIEW_PURCHASES->value, Permissions::CREATE_PURCHASES->value, Permissions::EDIT_PURCHASES->value, Permissions::DELETE_PURCHASES->value,
+            Permissions::VIEW_SALES->value, Permissions::CREATE_SALES->value, Permissions::EDIT_SALES->value, Permissions::DELETE_SALES->value,
+            Permissions::VIEW_DEVOLUTIONS->value, Permissions::CREATE_DEVOLUTIONS->value, Permissions::EDIT_DEVOLUTIONS->value, Permissions::DELETE_DEVOLUTIONS->value,
+            Permissions::VIEW_PAYMENTS->value, Permissions::CREATE_PAYMENTS->value, Permissions::EDIT_PAYMENTS->value, Permissions::DELETE_PAYMENTS->value,
+            Permissions::VIEW_PENDING_COUNTS->value,
+            Permissions::VIEW_TRANSACTIONS->value,
+            Permissions::VIEW_REPORTS->value,
+            Permissions::VIEW_DASHBOARD->value,
         ]);
 
-        $sellerRole = Role::findOrCreate('seller');
-        $sellerRole->givePermissionTo([
-            'view transactions',
-            'create transactions'
+        $seller->syncPermissions([
+            Permissions::VIEW_CATEGORIES->value,
+            Permissions::VIEW_SIZES->value,
+            Permissions::VIEW_PRODUCTS->value,
+            Permissions::VIEW_CUSTOMERS->value, Permissions::CREATE_CUSTOMERS->value, Permissions::EDIT_CUSTOMERS->value,
+            Permissions::VIEW_SALES->value, Permissions::CREATE_SALES->value,
+            Permissions::VIEW_DEVOLUTIONS->value, Permissions::CREATE_DEVOLUTIONS->value,
+            Permissions::VIEW_PAYMENTS->value, Permissions::CREATE_PAYMENTS->value,
+            Permissions::VIEW_DASHBOARD->value,
         ]);
 
-        $buyerRole = Role::findOrCreate('buyer');
-        $buyerRole->givePermissionTo([
-            'view transactions'
+        $buyer->syncPermissions([
+            Permissions::VIEW_CATEGORIES->value, Permissions::CREATE_CATEGORIES->value, Permissions::EDIT_CATEGORIES->value,
+            Permissions::VIEW_SIZES->value, Permissions::CREATE_SIZES->value, Permissions::EDIT_SIZES->value,
+            Permissions::VIEW_PRODUCTS->value, Permissions::CREATE_PRODUCTS->value, Permissions::EDIT_PRODUCTS->value,
+            Permissions::VIEW_SUPPLIERS->value, Permissions::CREATE_SUPPLIERS->value, Permissions::EDIT_SUPPLIERS->value,
+            Permissions::VIEW_PURCHASES->value, Permissions::CREATE_PURCHASES->value,
+            Permissions::VIEW_DEVOLUTIONS->value, Permissions::CREATE_DEVOLUTIONS->value,
+            Permissions::VIEW_PAYMENTS->value, Permissions::CREATE_PAYMENTS->value,
+            Permissions::VIEW_DASHBOARD->value,
         ]);
 
-        $accountantRole = Role::findOrCreate('accountant');
-        $accountantRole->givePermissionTo([
-            'view transactions',
-            'view reports'
+        $accountant->syncPermissions([
+            Permissions::VIEW_SUPPLIERS->value,
+            Permissions::VIEW_CUSTOMERS->value,
+            Permissions::VIEW_PURCHASES->value,
+            Permissions::VIEW_SALES->value,
+            Permissions::VIEW_DEVOLUTIONS->value,
+            Permissions::VIEW_PAYMENTS->value, Permissions::CREATE_PAYMENTS->value, Permissions::EDIT_PAYMENTS->value,
+            Permissions::VIEW_PENDING_COUNTS->value,
+            Permissions::VIEW_TRANSACTIONS->value,
+            Permissions::VIEW_REPORTS->value,
+            Permissions::VIEW_DASHBOARD->value,
         ]);
+
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

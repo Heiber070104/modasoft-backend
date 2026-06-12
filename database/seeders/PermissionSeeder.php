@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Permissions;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class PermissionSeeder extends Seeder
 {
@@ -12,19 +14,14 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissions = [
-            'view users',
-            'create users',
-            'edit users',
-            'delete users',
-            'view transactions',
-            'create transactions',
-            'manage settings',
-            'view reports',
-        ];
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-        foreach ($permissions as $permission) {
-            Permission::findOrCreate($permission);
+        $guardName = config('auth.defaults.guard', 'web');
+
+        foreach (Permissions::cases() as $permission) {
+            Permission::findOrCreate($permission->value, $guardName);
         }
+
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

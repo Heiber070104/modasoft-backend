@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Operation;
 use App\Models\Product;
 
-class Return extends Model
+class Devolution extends Model
 {
     use HasFactory;
 
