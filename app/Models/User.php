@@ -20,6 +20,7 @@ class User extends Authenticatable
         'personal_name',
         'email',
         'password',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -30,5 +31,11 @@ class User extends Authenticatable
         'deleted_at',
         'verified_at',
     ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    
 
 }

@@ -14,10 +14,18 @@ class UserRepo
     ) {
     }
 
-    public function getPaginated(array $params = [])
+    public function getPaginated(array $params = [], User $currentUser = null)
     {
-        $query = $this->user->query()->with(['roles']);
-
+        if($currentUser && $currentUser->hasRole('admin')) {
+            $query = $this->user->query()->with(['roles'])->withoutRole('admin');
+        }else if($currentUser && $currentUser->hasRole('manager')) {
+            $query = $this->user->query()->with(['roles'])->withoutRole(['admin','manager']);
+        }else {
+            throw ValidationException::withMessages([
+                'message' => ['Do not have permission to perform this action.'],
+            ]);
+        }
+        
         if (!empty($params['search'])) {
             $query->where('username', 'ilike', '%' . $params['search'] . '%')
                 ->orWhere('personal_name', 'ilike', '%' . $params['search'] . '%')
@@ -67,6 +75,19 @@ class UserRepo
             $user->getRoleNames()->each(fn ($role) => $user->removeRole($role));
             $user->syncRoles([$data['role']]);
         }
+        return $user;
+    }
+
+    public function toggleStatus(int $id): ?User
+    {
+        $user = $this->getById($id);
+
+        if (!$user) {
+            return null;
+        }
+
+        $user->is_active = !$user->is_active;
+        $user->save();
         return $user;
     }
 

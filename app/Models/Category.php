@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Size;
-use App\Models\Products;
+use App\Models\Product;
 
 class Category extends Model
 {
@@ -17,14 +17,19 @@ class Category extends Model
     public $fillable = [
         'id',
         'name',
+        'is_active',
     ];
 
-    public function size(){
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    public function sizes(){
         return $this->hasMany(Size::class, "id", "category_id");
     }
 
-    public function product()
+    public function products()
     {
-        return $this->hasMany(Products::class, 'id', 'id_category');
+        return $this->hasMany(Product::class, 'id', 'id_category');
     }
 }

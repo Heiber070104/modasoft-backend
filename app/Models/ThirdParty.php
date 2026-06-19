@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes; 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\ThirdPartyType;
 use App\Models\compraModel;
 use App\Models\Product;
 
@@ -23,7 +24,18 @@ class ThirdParty extends Model
         'type'
     ];
 
-    public function products(){
+    public function scopeSuppliers($query)
+    {
+        return $query->where('type', ThirdPartyType::SUPPLIER->value);
+    }
+
+    public function scopeCustomers($query)
+    {
+        return $query->where('type', ThirdPartyType::CUSTOMER->value);
+    }
+
+    public function products()
+    {
         return $this->hasMany(Product::class, "id_supplier", "id");
     }
     

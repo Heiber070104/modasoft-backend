@@ -22,6 +22,7 @@ class Product extends Model
         'description',
         'unit_price',
         'profit_percentage',
+        'is_active',
         'id_category',
         "id_size",
         "id_supplier"

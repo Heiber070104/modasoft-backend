@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\AuthRepo;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\AuthRequest;
+use App\Http\Requests\AuthRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

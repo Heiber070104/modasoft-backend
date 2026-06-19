@@ -8,6 +8,7 @@ enum Permissions: string
     case VIEW_USERS = 'view_users';
     case CREATE_USERS = 'create_users';
     case EDIT_USERS = 'edit_users';
+    case TOGGLE_STATUS_USERS = 'toggle_status_users';
     case DELETE_USERS = 'delete_users';
 
     // Roles
@@ -26,6 +27,7 @@ enum Permissions: string
     case VIEW_CATEGORIES = 'view_categories';
     case CREATE_CATEGORIES = 'create_categories';
     case EDIT_CATEGORIES = 'edit_categories';
+    case TOGGLE_STATUS_CATEGORIES = 'toggle_status_categories';
     case DELETE_CATEGORIES = 'delete_categories';
 
     // Tallas
@@ -38,6 +40,7 @@ enum Permissions: string
     case VIEW_PRODUCTS = 'view_products';
     case CREATE_PRODUCTS = 'create_products';
     case EDIT_PRODUCTS = 'edit_products';
+    case TOGGLE_STATUS_PRODUCTS = 'toggle_status_products';
     case DELETE_PRODUCTS = 'delete_products';
 
     // Proveedores 

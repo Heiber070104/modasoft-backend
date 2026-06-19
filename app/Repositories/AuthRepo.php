@@ -17,6 +17,7 @@ class AuthRepo
     {
         $user = $this->user
             ->where('email', $credentials['email'])
+            ->where('is_active', true)
             ->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
